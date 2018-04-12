@@ -1,0 +1,38 @@
+
+{% extends 'Superadmin/index.html' %}
+{% load superadmin_tags %}
+
+
+
+{% block  direct %}
+    <ol class="breadcrumb">
+        <li><a href="/superadmin/" >Home</a></li>
+        <li><a href="/superadmin/{{ appname }}/">{{ appname }}</a></li>
+        <li><a href="/superadmin/{{ appname }}/{{ modelname }}/">{{ modelname }}</a></li>
+        <li class="active">{{ obj }}--delete</li>
+    </ol>
+{% endblock %}
+
+{% block  right-content-container %}
+
+<h2 class="page-header ">{{ modelname }}</h2>
+<h4 class="page-header alert-danger">注意:{{ obj }}相关联的数据都将被删除!</h4>
+
+<div>
+
+    <form method="post">{% csrf_token %}
+
+        {% for obj in objs %}
+            <h4 class="alert-danger ">{{ obj }}相关联的数据都将被删除</h4>
+            <input type="hidden" name="obj_num" value="{{ obj.id }}">
+            <input type="hidden" name="obj" value="{{ obj }}">
+
+        {% endfor %}
+
+    <input type="submit"  class="btn btn-danger" value="确认删除">
+    <a  class="btn btn-info" href="{{ url }}">返回</a>
+    </form>
+
+</div>
+
+{% endblock %}

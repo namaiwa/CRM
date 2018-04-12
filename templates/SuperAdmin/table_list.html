@@ -1,0 +1,146 @@
+{% extends 'SuperAdmin/index.html' %}
+{% load superadmin_tags %}
+
+{% block  direct %}
+    <ol class="breadcrumb">
+        <li><a href="/superadmin/" >Home</a></li>
+        <li><a href="/superadmin/{{ appname }}/">{{ appname }}</a></li>
+        <li class="active">{{ modelname }}</li>
+    </ol>
+{% endblock %}
+
+
+{% block  right-content-container %}
+<div class="row">
+    <h2 style="display:inline-block" class="page-header">{{ modelname }}</h2>
+
+    <h4 style="display:inline-block" class="col-sm-offset-1"><a href="add/" >添加</a></h4>
+</div>
+
+
+    <a href="{% url 'superadmin' %}" class="button ">首页</a>
+
+
+
+<div>
+    {% if admin_class.search_fields %}
+        <form>
+            <input type="search" name="_q" placeholder="{% for field in admin_class.search_fields %}{{ field }}{% endfor %}" value="{{ search_key }}">
+            <input type="hidden" name="_o" value="{{ column_number }}">
+            <input type="submit" value="搜索">
+        </form>
+    {% endif %}
+
+    <div class="row">
+        {% if admin_class.list_filter %}
+            <form>
+                {% for filter_column in admin_class.list_filter %}
+                   {{ filter_column }}: {% build_filter_column filter_column model_class filter_condition %}
+                {% endfor %}
+                <input type="hidden" name="_o" value="{{ column_number }}">
+                <input type="submit" value="过滤">
+            </form>
+        {% endif %}
+    </div>
+
+
+
+
+    <table class="table table-striped">
+        <div >
+            <form method="post" id="data_form" onsubmit="return ActionCheck(this)">{% csrf_token %}
+                Action:
+                <select name="action" required="">
+                    <option value="" selected="">---------</option>
+
+                    {% for action in admin_class.actions %}
+                     <option value="{{ action }}">{{ action }}</option>
+                    {% endfor %}
+
+                </select>
+                <input type="hidden" name="select_across" value="0">
+                <button type="submit" title="Run the selected action">Go</button>
+                <span class="action-counter" data-actions-icnt="5" style="display: inline;">0 of 5 selected</span>
+             </form>
+        </div>
+
+        <thead>
+            <tr>
+                <th><input type="checkbox" onclick="select_all(this)"></th>
+                {% if admin_class.list_display %}
+                    {% for column in admin_class.list_display %}
+{#                                        href="{{ url }}_o={% if column_number == forloop.counter %}-{% endif %}{{ forloop.counter }}"#}
+                            <th><a href="{% make_order_url url column_number forloop.counter %}">
+                                {{ column }}
+                                {% order_symbol column_number forloop.counter %}</a>
+                            </th>
+
+                    {% endfor %}
+                {% else %}
+                    <th>{{ modelname }}</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+             {% for model_obj in querysets %}
+                <tr>
+                    <td><input form="data_form" column_select="true" type="checkbox" name="select_obj" value="{{ model_obj.id }}"></td>
+                    {% build_table_row model_obj admin_class %}
+                </tr>
+             {% endfor %}
+        </tbody>
+    </table>
+
+
+
+</div>
+
+
+<div class="pagination">
+    <span class="step-links">
+        <ul class="pagination">
+            {% if querysets.has_previous %}
+                <li class=""><a href="{% make_page_url url 1 %}"> 首页 1 </a></li>
+                <li class=""><a href="{% make_page_url url querysets.previous_page_number %}"> < </a></li>
+            {% endif %}
+
+                {% make_pagelist querysets url %}
+
+            {% if querysets.has_next %}
+                <li class=""><a href="{% make_page_url url querysets.next_page_number %}"> > </a></li>
+                <li class=""><a href="{% make_page_url url querysets.paginator.num_pages %}"> 末页{{ querysets.paginator.num_pages }} </a></li>
+            {% endif %}
+        </ul>
+
+    </span>
+</div>
+
+
+<script>
+function select_all(ele){
+    if ($(ele).prop('checked')) {
+        $('input[column_select]').prop('checked',true)
+    }else {
+        $('input[column_select]').prop('checked', false)
+    }
+}
+
+function ActionCheck(ele) {
+    var selected_action = $('select[name="action"]').val();
+    var selected_obj = $('input[column_select]').filter(':checked');
+    if (!selected_action){
+        alert('no action selected');
+        return false;
+    }
+    if (selected_obj.length == 0){
+        alert('no object selected');
+        return false;
+    }
+
+}
+
+</script>
+
+
+
+{% endblock %}

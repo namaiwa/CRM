@@ -1,0 +1,19 @@
+{% extends 'SuperAdmin/form_base.html' %}
+{% load superadmin_tags %}
+
+
+{% block  direct %}
+    <ol class="breadcrumb">
+        <li><a href="/superadmin/" >Home</a></li>
+        <li><a href="/superadmin/{{ appname }}/">{{ appname }}</a></li>
+        <li><a href="/superadmin/{{ appname }}/{{ modelname }}/">{{ modelname }}</a></li>
+        <li class="active">add</li>
+    </ol>
+{% endblock %}
+
+{% block  head_title %}
+    <h2 class="page-header">{{ modelname }}</h2>
+    <h4 class="page-header">添加</h4>
+    {{ obj }}
+{% endblock %}
+

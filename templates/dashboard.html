@@ -1,0 +1,9 @@
+{% extends 'index.html' %}
+{% block body %}
+<h1>hello</h1>
+    <h2>{{ request.user }}</h2>
+    <h3><a href={% url 'acc_logout' %}>注销</a></h3>
+
+
+
+{% endblock %}

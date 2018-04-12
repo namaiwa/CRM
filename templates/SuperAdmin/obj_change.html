@@ -1,0 +1,36 @@
+{% extends 'SuperAdmin/form_base.html' %}
+{% load superadmin_tags %}
+
+{% block  direct %}
+    <ol class="breadcrumb">
+        <li><a href="/superadmin/" >Home</a></li>
+        <li><a href="/superadmin/{{ appname }}/">{{ appname }}</a></li>
+        <li><a href="/superadmin/{{ appname }}/{{ modelname }}/">{{ modelname }}</a></li>
+        <li class="active">{{ obj }}--change</li>
+    </ol>
+{% endblock %}
+
+
+
+{% block  head_title %}
+    <h2 class="page-header">{{ modelname }}</h2>
+    <h4 class="page-header">修改{{ form_obj.instance }}</h4>
+{% endblock %}
+
+
+{% block  readonly_field %}
+
+        {% for row_name in admin_class.readonly_fields %}
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">{{ row_name }}</label>
+            <div class="col-sm-5 ">
+              {% get_value obj row_name %}
+            </div>
+          </div>
+        {% endfor %}
+
+{% endblock %}
+
+{% block  button_delete %}
+    <a class="btn btn-info" style="color:red" href="{% url 'obj_delete' appname modelname obj_id%}">删除</a>
+{% endblock %}

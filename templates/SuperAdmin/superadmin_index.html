@@ -1,0 +1,30 @@
+{% extends 'superadmin/index.html' %}
+
+
+{% block  right-content-container %}
+
+{% block pro_name %}{% endblock %}
+<h2 class="page-header">Super Admin</h2>
+
+<div>
+    {% for appname, modelsname in site.display.items %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{{ appname }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for model in modelsname %}
+                    <tr>
+                        <td><a href="{% url 'table_list' appname model %}">{{ model }}</a></td>
+                        <td><a href="{% url 'obj_add' appname model %}">Add</a></td>
+                        <td><a href="{% url 'table_list' appname model %}">Change</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</div>
+
+{% endblock %}
