@@ -1,0 +1,72 @@
+{% extends 'index.html' %}
+{% block right %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h2 class="page-header">student enrollment</h2>
+    </div>
+
+
+    <div class="col-sm-offset-2 ">
+    <form class="form-horizontal" method="post" onsubmit="return SelectCheck(this)">{% csrf_token %}
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">姓名</label>
+            <div class="col-sm-5">
+                <select class="form-control" name="name">
+                    <option value="">-----------</option>
+                    {% for customer in customers %}
+                        <option value="{{ customer.id }}">{{ customer }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">班级</label>
+            <div class="col-sm-5">
+                <select class="form-control" name="class_id">
+                    <option value="">------------</option>
+                    {% for class in classes %}
+                        <option value="{{ class.id }}">{{ class }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+          </div>
+
+
+        <div class="form-group" >
+
+            <div class="col-sm-offset-4 col-sm-10 div-inline" >
+                <button type="submit" class="btn btn-info">下一步</button>
+{#                <a class="btn btn-info" href="{% url 'table_list' appname modelname %}">返回</a>#}
+            </div>
+        </div>
+    </form>
+    </div>
+
+
+
+
+
+
+
+
+<script>
+
+function SelectCheck(ele) {
+    var selected_name = $('select[name="name"]').val();
+    var selected_class = $('select[name="class_id"]').val();
+
+    if (!selected_name){
+        alert('no name selected');
+        return false;
+    }
+    if (!selected_class){
+        alert('no class selected');
+        return false;
+    }
+
+}
+
+</script>
+
+
+
+{% endblock %}

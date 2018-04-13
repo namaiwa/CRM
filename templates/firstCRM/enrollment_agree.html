@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h2 class="page-header">student enrollment</h2>
+    </div>
+        <h3 class="col-sm-offset-3" style="color: red">{{ msg }}</h3>
+    <div class="col-sm-offset-2 ">
+    <form class="form-horizontal" enctype="multipart/form-data" method="post" onsubmit="return SelectCheck(this)">{% csrf_token %}
+          <div class="form-group">
+            <label  class="col-sm-2 control-label">姓名:</label>
+            <div class="col-sm-5">
+                <h5 for="inputEmail3">{{ customer_obj }}</h5>
+            </div>
+          </div>
+          <div class="form-group">
+            <label  class="col-sm-2 control-label">班级:</label>
+            <div class="col-sm-5">
+                <h5 for="inputEmail3">{{ class_obj }}</h5>
+            </div>
+          </div>
+          <div class="form-group">
+            <label  class="col-sm-2 control-label">合同:</label>
+            <div class="col-sm-5">
+                <pre>{{ contract_obj.content }}</pre>
+            </div>
+          </div>
+          <div class="form-group">
+            <label  class="col-sm-2 control-label"></label>
+            <div class="col-sm-5">
+                <input type="checkbox" name="agree" value="qqq">我同意以上合同
+            </div>
+          </div>
+          <div class="form-group">
+            <label  class="col-sm-2 control-label">上传证件</label>
+            <input type="file" id="uploadfile" name="files">
+            <p class="help-block"></p>
+          </div>
+
+
+        <div class="form-group" >
+
+            <div class="col-sm-offset-4 col-sm-10 div-inline" >
+                <button type="submit" class="btn btn-info">下一步</button>
+{#                <a class="btn btn-info" href="{% url 'table_list' appname modelname %}">返回</a>#}
+            </div>
+        </div>
+    </form>
+    </div>
+
+
+
+
+
+
+
+
+<script>
+
+function SelectCheck(ele) {
+    var selected_agree =  $('input[name="agree"]').filter(':checked');
+    var selected_file = $('input[id="uploadfile"]').val();
+
+    if (!selected_agree.length){
+        alert('no agree selected');
+        return false;
+    }
+    if (!selected_file){
+        alert('no file selected');
+        return false;
+    }
+
+}
+
+</script>
+
+
+
+{% endblock %}

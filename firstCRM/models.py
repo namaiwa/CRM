@@ -88,6 +88,7 @@ class ClassList(models.Model):
     teachers = models.ManyToManyField("UserProfile", verbose_name="讲师")
     start_date = models.DateField("开班日期")
     graduate_date = models.DateField("毕业日期", blank=True, null=True)
+    contract = models.ForeignKey('ContractTemplate', models.DO_NOTHING)
 
     def __str__(self):
         return "%s(%s)期" % (self.course.name, self.semester)
@@ -167,3 +168,44 @@ class Branch(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# 存储合同模板
+class ContractTemplate(models.Model):
+    name = models.CharField(max_length=64)
+    content = models.TextField()
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s" % self.name
+
+
+# 学员报名表
+class StudentEnrollment(models.Model):
+    customer = models.ForeignKey("Customer", models.DO_NOTHING)
+    class_grade = models.ForeignKey("ClassList", models.DO_NOTHING)
+    consultant = models.ForeignKey("UserProfile", models.DO_NOTHING)
+    contract_agreed = models.BooleanField(default=False)
+    contract_signed_date = models.DateTimeField(blank=True, null=True, auto_now=True)
+    contract_approved = models.BooleanField(default=False)
+    contract_approved_date = models.DateTimeField(verbose_name="合同审核时间", blank=True, null=True)
+
+    class Meta:
+        unique_together = ('customer', 'class_grade')
+
+    def __str__(self):
+        return "%s" % self.customer
+
+
+# 存储学员缴费记录
+class PaymentRecord(models.Model):
+    enrollment = models.ForeignKey(StudentEnrollment, models.DO_NOTHING)
+    payment_type_choices = ((0, '报名费'), (1, '学费'), (2, '退费'))
+    payment_type = models.SmallIntegerField(choices=payment_type_choices, default=0)
+    amount = models.IntegerField("费用", default=500)
+    consultant = models.ForeignKey("UserProfile", models.DO_NOTHING)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s" % self.enrollment
+

@@ -4,10 +4,10 @@ from firstCRM import models
 
 
 class TestAdmin(BaseAdmin):
-    list_display = ['id', 'name', 'date', 'contact', 'source', 'consultant', 'referral_from']
+    list_display = ['id', 'name', 'date', 'contact', 'source', 'consultant', 'referral_from', 'status']
     list_filter = ['name', 'date', 'contact', 'consultant', 'referral_from']
     search_fields = ['name']
-    readonly_fields = ['referral_from']
+    readonly_fields = ['referral_from', 'status']
     actions = ['test']
 
     def test(self, request, querysets):
@@ -29,3 +29,7 @@ site.register(models.Role)
 site.register(models.Student)
 site.register(models.StudyRecord)
 site.register(models.UserProfile)
+site.register(models.StudentEnrollment)
+site.register(models.ContractTemplate)
+site.register(models.PaymentRecord)
+site.register(models.Branch)

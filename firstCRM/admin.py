@@ -13,6 +13,7 @@ class TestAdmin(admin.ModelAdmin):
     def test(self, request, queryset):
         print('.....', self, request, queryset)
 
+
 admin.site.register(models.Branch)
 admin.site.register(models.ClassList)
 admin.site.register(models.Course)
@@ -24,4 +25,7 @@ admin.site.register(models.Role)
 admin.site.register(models.Student)
 admin.site.register(models.StudyRecord)
 admin.site.register(models.UserProfile)
+admin.site.register(models.StudentEnrollment)
+admin.site.register(models.ContractTemplate)
+admin.site.register(models.PaymentRecord)
 
