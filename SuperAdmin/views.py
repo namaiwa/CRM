@@ -1,12 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from SuperAdmin.sites import site
 from SuperAdmin import app_setup, form_handle
+from UserManager.permission import check_permission
 app_setup.app_discover()
 
 
+@login_required
+@check_permission
 def app_form_list(request, appname):
     models_name = site.display.get(appname)
     print(models_name)
@@ -16,6 +20,8 @@ def app_form_list(request, appname):
     return render(request, 'SuperAdmin/app_form.html', {'modelsname': models_name, 'appname': appname})
 
 
+@login_required
+@check_permission
 def table_list(request, appname, modelname):
     admin_dict = site.display[appname][modelname]
     model_class = admin_dict['model']
@@ -93,6 +99,8 @@ def table_list(request, appname, modelname):
     return render(request, 'SuperAdmin/table_list.html', params)
 
 
+@login_required
+@check_permission
 def obj_change(request, appname, modelname, obj_id):
     admin_dict = site.display[appname][modelname]
     model_class = admin_dict['model']
@@ -111,6 +119,8 @@ def obj_change(request, appname, modelname, obj_id):
     return render(request, 'SuperAdmin/obj_change.html', locals())
 
 
+@login_required
+@check_permission
 def obj_add(request, appname, modelname):
     admin_dict = site.display[appname][modelname]
     model_class = admin_dict['model']
@@ -128,6 +138,8 @@ def obj_add(request, appname, modelname):
     return render(request, 'SuperAdmin/obj_add.html', locals())
 
 
+@login_required
+@check_permission
 def obj_delete(request, appname, modelname, obj_id):
     admin_dict = site.display[appname][modelname]
     model_class = admin_dict['model']
@@ -162,5 +174,6 @@ def acc_logout(request):
     return redirect('acc_login')
 
 
+@login_required
 def index(request):
     return render(request, 'SuperAdmin/superadmin_index.html', {'site': site})

@@ -1,25 +1,24 @@
-from django.contrib.auth.models import User
 from django.db import models
-
+from UserManager.models import MyUser
 
 # Create your models here.
-# 用户信息表
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, models.DO_NOTHING)
-    name = models.CharField(max_length=64, verbose_name='姓名')
-    role = models.ManyToManyField('Role', blank=True)
+# # 用户信息表
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(User, models.DO_NOTHING)
+#     name = models.CharField(max_length=64, verbose_name='姓名')
+#     role = models.ManyToManyField('Role', blank=True)
+#
+#     def __str__(self):
+#         return self.name
 
-    def __str__(self):
-        return self.name
 
-
-# 角色信息表
-class Role(models.Model):
-    name = models.CharField(max_length=64, unique=True)
-    menus = models.ManyToManyField('Menus', blank=True)
-
-    def __str__(self):
-        return self.name
+# # 角色信息表
+# class Role(models.Model):
+#     name = models.CharField(max_length=64, unique=True)
+#     menus = models.ManyToManyField('Menus', blank=True)
+#
+#     def __str__(self):
+#         return self.name
 
 
 # 客户信息表
@@ -34,7 +33,7 @@ class Customer(models.Model):
     consult_content = models.TextField(verbose_name="咨询内容")
     status_choices = ((0, '未报名'), (1, '已报名'), (2, '已退学'))
     status = models.SmallIntegerField(choices=status_choices)
-    consultant = models.ForeignKey("UserProfile", models.DO_NOTHING, verbose_name="课程顾问")
+    consultant = models.ForeignKey(MyUser, models.DO_NOTHING, verbose_name="课程顾问")
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -54,7 +53,7 @@ class Student(models.Model):
 class CustomerFollowUp(models.Model):
     customer = models.ForeignKey("Customer", models.DO_NOTHING)
     content = models.TextField(verbose_name="跟踪内容")
-    user = models.ForeignKey("UserProfile", models.DO_NOTHING, verbose_name="跟进人")
+    user = models.ForeignKey(MyUser, models.DO_NOTHING, verbose_name="跟进人")
     status_choices = ((0, '近期无报名计划'),
                       (1, '一个月内报名'),
                       (2, '2周内内报名'),
@@ -85,7 +84,7 @@ class ClassList(models.Model):
     class_type_choices = ((0, '脱产'), (1, '周末'), (2, '网络班'))
     class_type = models.SmallIntegerField(choices=class_type_choices, default=0)
     semester = models.SmallIntegerField(verbose_name="学期")
-    teachers = models.ManyToManyField("UserProfile", verbose_name="讲师")
+    teachers = models.ManyToManyField(MyUser, verbose_name="讲师")
     start_date = models.DateField("开班日期")
     graduate_date = models.DateField("毕业日期", blank=True, null=True)
     contract = models.ForeignKey('ContractTemplate', models.DO_NOTHING)
@@ -101,7 +100,7 @@ class ClassList(models.Model):
 class CourseRecord(models.Model):
     class_grade = models.ForeignKey("ClassList", models.DO_NOTHING, verbose_name="上课班级")
     day_num = models.PositiveSmallIntegerField(verbose_name="课程节次")
-    teacher = models.ForeignKey("UserProfile", models.DO_NOTHING)
+    teacher = models.ForeignKey(MyUser, models.DO_NOTHING)
     title = models.CharField("本节主题", max_length=64)
     content = models.TextField("本节内容")
     has_homework = models.BooleanField("本节有作业", default=True)
@@ -147,18 +146,18 @@ class StudyRecord(models.Model):
         return "%s %s %s" % (self.course_record, self.student, self.score)
 
 
-# 菜单信息
-class Menus(models.Model):
-    name = models.CharField(max_length=64)
-    url_type_choices = ((0, 'absolute'), (1, 'dynamic'))
-    url_type = models.SmallIntegerField(choices=url_type_choices, default=0)
-    url_name = models.CharField(max_length=128)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        unique_together = ('name', 'url_name')
+# # 菜单信息
+# class Menus(models.Model):
+#     name = models.CharField(max_length=64)
+#     url_type_choices = ((0, 'absolute'), (1, 'dynamic'))
+#     url_type = models.SmallIntegerField(choices=url_type_choices, default=0)
+#     url_name = models.CharField(max_length=128)
+#
+#     def __str__(self):
+#         return self.name
+#
+#     class Meta:
+#         unique_together = ('name', 'url_name')
 
 
 # 校区
@@ -184,7 +183,7 @@ class ContractTemplate(models.Model):
 class StudentEnrollment(models.Model):
     customer = models.ForeignKey("Customer", models.DO_NOTHING)
     class_grade = models.ForeignKey("ClassList", models.DO_NOTHING)
-    consultant = models.ForeignKey("UserProfile", models.DO_NOTHING)
+    consultant = models.ForeignKey(MyUser, models.DO_NOTHING)
     contract_agreed = models.BooleanField(default=False)
     contract_signed_date = models.DateTimeField(blank=True, null=True, auto_now=True)
     contract_approved = models.BooleanField(default=False)
@@ -203,7 +202,7 @@ class PaymentRecord(models.Model):
     payment_type_choices = ((0, '报名费'), (1, '学费'), (2, '退费'))
     payment_type = models.SmallIntegerField(choices=payment_type_choices, default=0)
     amount = models.IntegerField("费用", default=500)
-    consultant = models.ForeignKey("UserProfile", models.DO_NOTHING)
+    consultant = models.ForeignKey(MyUser, models.DO_NOTHING)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

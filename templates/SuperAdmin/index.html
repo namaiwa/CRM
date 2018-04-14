@@ -39,7 +39,7 @@
       <ul class="nav nav-sidebar">
 
 {#        {{ request.user.userprofile.role.all }}#}
-        {% for role in  request.user.userprofile.role.select_related %}
+        {% for role in  request.user.role.select_related %}
             {% for menu in role.menus.select_related %}
                 <li><a href="{% if menu.url_type == 0 %}{{ menu.url_name }}{% else %}{% url menu.url_name %}{% endif %}">{{ menu.name }}</a></li>
              {% endfor %}

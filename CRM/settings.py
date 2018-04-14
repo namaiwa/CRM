@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'firstCRM',
     'Student',
     'Teacher',
+    'UserManager',
 ]
 
 MIDDLEWARE = [
@@ -129,5 +130,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'statics'),
 ]
 
+AUTH_USER_MODEL = 'UserManager.MyUser'
 
+LOGIN_URL = '/superadmin/login/'
 

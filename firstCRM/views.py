@@ -21,7 +21,7 @@ def stu_enrollment(request):
             enrollment_obj = models.StudentEnrollment.objects.get_or_create(
                 customer_id=customer_id,
                 class_grade_id=class_grade_id,
-                consultant_id=request.user.userprofile.id)[0]
+                consultant_id=request.user.id)[0]
             name = enrollment_obj.customer
             class_ = enrollment_obj.class_grade
             msg = '请将此链接发给学员：127.0.0.1:8000/crm/stu_enrollment/%s' % enrollment_obj.id
